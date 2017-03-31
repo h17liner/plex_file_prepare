@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import requests
 import PTN
 from urlparse import urlparse, parse_qs
@@ -10,9 +11,9 @@ class RutrackerPage(object):
     }
 
     categories_map = {
-        '2': 'Movies',
-        '18': 'TV-Shows',
-        '8': 'Music',
+        '2': 'movies',
+        '18': 'tv-shows',
+        '8': 'audio',
     }
 
     def __init__(self, page_url):
@@ -25,7 +26,12 @@ class RutrackerPage(object):
 
     def get_title(self):
         soup = self.data
-        return soup.find("a", {"id": "topic-title"}).string
+        title = soup.find("a", {"id": "topic-title"}).string
+        if not title:
+            tag = soup.find("div", attrs={"data-share_title": True})
+            title = tag.get('data-share_title').encode('utf-8').strip()
+
+        return title
 
     def parsed_data(self):
         raw_title = self.get_title()

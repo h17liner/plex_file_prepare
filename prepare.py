@@ -8,10 +8,11 @@ from urlparse import urlparse
 
 parser = argparse.ArgumentParser(description='Torrent processing.')
 parser.add_argument('--torrent_file', type=str)
+parser.add_argument('--plex_path', type=str)
 
 args = parser.parse_args()
 
-if not args.torrent_file or not args.torrent_path:
+if not args.torrent_file or not args.plex_path:
     print "Cannot work without torrentfile.  Exit"
     sys.exit(1)
 
@@ -32,4 +33,4 @@ if domain == 'rutracker.org':
     tracker = rutracker.RutrackerPage(page_url=torrent.get('comment'))
 
 title = '%s %s%s' %(tracker.title(lang='en'), tracker.year(), file_extension)
-print title
+print  '%s/%s/%s' % (args.plex_path, tracker.categories()[1], title)
